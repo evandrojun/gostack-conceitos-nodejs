@@ -34,13 +34,13 @@ app.put('/repositories/:id', (request, response) => {
 
   const editedRepo = repositories.find(repo => repo.id === id);
 
-  if (!editedRepo) return response.status(404).json({ message: 'Repository not found' });
+  if (!editedRepo) return response.status(400).json({ message: 'Repository not found' });
 
   repositories.map(repo => {
     if (repo.id === id) {
       if (title) repo.title = title;
       if (url) repo.url = url;
-      if (techs) repo.techs = techs.length === 0 ? [techs] : [...repo.techs, techs];
+      if (techs) repo.techs = techs;
     }
   });
 
@@ -52,11 +52,11 @@ app.delete('/repositories/:id', (request, response) => {
 
   const deletedRepo = repositories.find(repo => repo.id === id);
 
-  if (!deletedRepo) return response.status(404).json({ message: 'Repository not found' });
+  if (!deletedRepo) return response.status(400).json({ message: 'Repository not found' });
 
   repositories = repositories.filter(repo => repo.id !== id);
 
-  return response.json(deletedRepo);
+  return response.status(204).json({ message: 'Repo deleted' });
 });
 
 app.post('/repositories/:id/like', (request, response) => {
@@ -64,7 +64,7 @@ app.post('/repositories/:id/like', (request, response) => {
 
   const likedRepo = repositories.find(repo => repo.id === id);
 
-  if (!likedRepo) return response.status(404).json({ message: 'Repository not found' });
+  if (!likedRepo) return response.status(400).json({ message: 'Repository not found' });
 
   likedRepo.likes += 1;
 
